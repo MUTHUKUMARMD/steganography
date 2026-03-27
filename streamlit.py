@@ -321,7 +321,7 @@ Decoder Exists: {os.path.exists(MODEL_PATH_DECODER)}""")
     col1, col2 = st.columns(2)
     
     with col1:
-        st.subheader("📸 Original Artwork (Cover)")
+        st.subheader("Original Artwork (Cover)")
         uploaded_cover = st.file_uploader("Upload artwork image", type=['jpg', 'jpeg', 'png'], key='cover')
         
         if uploaded_cover:
@@ -329,7 +329,7 @@ Decoder Exists: {os.path.exists(MODEL_PATH_DECODER)}""")
             st.image(cover_img, caption="Original Artwork", use_column_width=True)
     
     with col2:
-        st.subheader("🎨 Ownership Proof (Secret)")
+        st.subheader("Ownership Proof (Secret)")
         uploaded_secret = st.file_uploader("Upload ownership proof (logo/ID)", type=['jpg', 'jpeg', 'png'], key='secret')
         
         if uploaded_secret:
@@ -342,7 +342,7 @@ Decoder Exists: {os.path.exists(MODEL_PATH_DECODER)}""")
         # Processing
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            if st.button("🔐 Encode & Hide Proof", type="primary", use_container_width=True):
+            if st.button("Encode & Hide Proof", type="primary", use_container_width=True):
                 progress_bar = st.progress(0)
                 status_text = st.empty()
                 
@@ -355,7 +355,7 @@ Decoder Exists: {os.path.exists(MODEL_PATH_DECODER)}""")
                     secret_array = preprocess_image(secret_img)
                     
                     # Encode
-                    status_text.text("🔐 Encoding ownership proof into artwork...")
+                    status_text.text("Encoding ownership proof into artwork...")
                     progress_bar.progress(50)
                     
                     stego_array = encoder.predict([secret_array, cover_array], verbose=0)
@@ -382,16 +382,16 @@ Decoder Exists: {os.path.exists(MODEL_PATH_DECODER)}""")
                     mean_diff = np.mean(np.abs(cover_array - stego_array))
                     
                     with col_m1:
-                        st.metric("📊 Cover-Stego PSNR", f"{cover_stego_psnr:.1f} dB")
+                        st.metric("Cover-Stego PSNR", f"{cover_stego_psnr:.1f} dB")
                     with col_m2:
-                        st.metric("🔍 Secret PSNR", f"{secret_recovered_psnr:.1f} dB")
+                        st.metric("Secret PSNR", f"{secret_recovered_psnr:.1f} dB")
                     with col_m3:
-                        st.metric("📐 Max Diff", f"{max_diff:.6f}")
+                        st.metric("Max Diff", f"{max_diff:.6f}")
                     with col_m4:
-                        st.metric("📈 SSIM", f"{cover_stego_ssim:.4f}")
+                        st.metric("SSIM", f"{cover_stego_ssim:.4f}")
                     
                     # Detailed metrics
-                    with st.expander("📋 Detailed Metrics"):
+                    with st.expander("Detailed Metrics"):
                         metrics_data = {
                             "Stealth Quality": {
                                 "Cover-Stego PSNR (dB)": f"{cover_stego_psnr:.2f}",
@@ -413,7 +413,7 @@ Decoder Exists: {os.path.exists(MODEL_PATH_DECODER)}""")
                         st.json(metrics_data)
                     
                     # Visualization
-                    tab1, tab2 = st.tabs(["📊 Visual Comparison", "🔍 Difference Analysis"])
+                    tab1, tab2 = st.tabs(["Visual Comparison", "Difference Analysis"])
                     
                     with tab1:
                         fig = create_comparison_figure(cover_array, stego_array, "Original Artwork", "With Hidden Proof")
@@ -425,7 +425,7 @@ Decoder Exists: {os.path.exists(MODEL_PATH_DECODER)}""")
                     
                     # Download results
                     st.divider()
-                    st.subheader("📥 Download Results")
+                    st.subheader("Download Results")
                     
                     col_d1, col_d2, col_d3 = st.columns(3)
                     
@@ -482,14 +482,14 @@ Decoder Exists: {os.path.exists(MODEL_PATH_DECODER)}""")
                     st.error(f"❌ Error during encoding: {e}")
     
     else:
-        st.info("👆 Please upload both an artwork image and an ownership proof image to begin.")
+        st.info("Please upload both an artwork image and an ownership proof image to begin.")
 
 # ============================================================================
 # PAGE: DECODE (Extract Ownership Proof)
 # ============================================================================
 
 def page_decode():
-    st.title("🔓 Decode - Extract Ownership Proof")
+    st.title("Decode - Extract Ownership Proof")
     st.markdown("Verify your ownership by extracting the hidden proof from a stego image.")
     
     # Load models
@@ -503,7 +503,7 @@ def page_decode():
         **Expected Location:** Same directory as streamlit.py
         """)
         
-        with st.expander("🔧 Debug Information"):
+        with st.expander("Debug Information"):
             st.code(f"""Script Directory: {SCRIPT_DIR}
 Decoder Path: {MODEL_PATH_DECODER}
 Decoder Exists: {os.path.exists(MODEL_PATH_DECODER)}""")
@@ -513,7 +513,7 @@ Decoder Exists: {os.path.exists(MODEL_PATH_DECODER)}""")
     col1, col2 = st.columns(2)
     
     with col1:
-        st.subheader("🖼️ Stego Image (Artwork with Hidden Proof)")
+        st.subheader("Stego Image (Artwork with Hidden Proof)")
         uploaded_stego = st.file_uploader("Upload stego image", type=['jpg', 'jpeg', 'png'], key='stego_decode')
         
         if uploaded_stego:
@@ -525,19 +525,19 @@ Decoder Exists: {os.path.exists(MODEL_PATH_DECODER)}""")
         
         col_btn1, col_btn2, col_btn3 = st.columns([1, 2, 1])
         with col_btn2:
-            if st.button("🔓 Extract Hidden Proof", type="primary", use_container_width=True):
+            if st.button("Extract Hidden Proof", type="primary", use_container_width=True):
                 progress_bar = st.progress(0)
                 status_text = st.empty()
                 
                 try:
                     # Preprocess
-                    status_text.text("🔄 Preprocessing stego image...")
+                    status_text.text("Preprocessing stego image...")
                     progress_bar.progress(30)
                     
                     stego_array = preprocess_image(stego_img)
                     
                     # Decode
-                    status_text.text("🔓 Extracting ownership proof...")
+                    status_text.text("Extracting ownership proof...")
                     progress_bar.progress(60)
                     
                     recovered_array = decoder.predict(stego_array, verbose=0)
@@ -557,7 +557,7 @@ Decoder Exists: {os.path.exists(MODEL_PATH_DECODER)}""")
                         st.image((recovered_array[0] * 255).astype(np.uint8), caption="Extracted Proof")
                     
                     # Analysis
-                    st.subheader("📊 Extraction Analysis")
+                    st.subheader("Extraction Analysis")
                     
                     col_a1, col_a2, col_a3 = st.columns(3)
                     
@@ -565,14 +565,14 @@ Decoder Exists: {os.path.exists(MODEL_PATH_DECODER)}""")
                     stego_stats = get_image_stats(stego_array)
                     
                     with col_a1:
-                        st.metric("🎨 Proof Mean Value", f"{recovered_stats['mean']:.3f}")
+                        st.metric("Proof Mean Value", f"{recovered_stats['mean']:.3f}")
                     with col_a2:
-                        st.metric("📐 Proof Std Dev", f"{recovered_stats['std']:.3f}")
+                        st.metric("Proof Std Dev", f"{recovered_stats['std']:.3f}")
                     with col_a3:
-                        st.metric("💪 Signal Strength", f"{(recovered_stats['mean'] / stego_stats['mean']):.2f}×")
+                        st.metric("Signal Strength", f"{(recovered_stats['mean'] / stego_stats['mean']):.2f}×")
                     
                     # Detailed analysis
-                    with st.expander("📋 Detailed Analysis"):
+                    with st.expander("Detailed Analysis"):
                         analysis = {
                             "Stego Image Stats": stego_stats,
                             "Recovered Proof Stats": recovered_stats,
@@ -582,7 +582,7 @@ Decoder Exists: {os.path.exists(MODEL_PATH_DECODER)}""")
                     
                     # Download
                     st.divider()
-                    st.subheader("📥 Download Extracted Proof")
+                    st.subheader("Download Extracted Proof")
                     
                     recovered_img = postprocess_image(recovered_array)
                     buf = io.BytesIO()
@@ -600,7 +600,7 @@ Decoder Exists: {os.path.exists(MODEL_PATH_DECODER)}""")
                     st.error(f"❌ Error during decoding: {e}")
     
     else:
-        st.info("👆 Please upload a stego image to extract the hidden proof.")
+        st.info("Please upload a stego image to extract the hidden proof.")
 
 # ============================================================================
 # PAGE: COMPARE & VERIFY
@@ -610,7 +610,7 @@ def page_compare():
     st.title("🔍 Compare & Verify")
     st.markdown("Verify ownership by comparing original and potentially leaked images.")
     
-    st.subheader("Step 1️⃣ - Upload Images to Compare")
+    st.subheader("Upload Images to Compare")
     
     col1, col2 = st.columns(2)
     
@@ -633,7 +633,7 @@ def page_compare():
             **Expected Location:** Same directory as streamlit.py
             """)
             
-            with st.expander("🔧 Debug Information"):
+            with st.expander("Debug Information"):
                 st.code(f"""Script Directory: {SCRIPT_DIR}
 Decoder Path: {MODEL_PATH_DECODER}
 Decoder Exists: {os.path.exists(MODEL_PATH_DECODER)}""")
@@ -649,7 +649,7 @@ Decoder Exists: {os.path.exists(MODEL_PATH_DECODER)}""")
         arr_b = preprocess_image(img_b)
         
         # Extract proofs
-        if st.button("🔍 Extract & Compare Ownership Proofs", type="primary", use_container_width=True):
+        if st.button("Extract & Compare Ownership Proofs", type="primary", use_container_width=True):
             progress_bar = st.progress(0)
             status = st.empty()
             
