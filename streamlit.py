@@ -1,5 +1,5 @@
 """
-🔐 Invisible DRM Platform - Deep Learning Steganography
+Invisible DRM Platform - Deep Learning Steganography
 Embed ownership proof invisibly into images using advanced neural networks.
 Proof persists even after image edits and compression.
 """
@@ -24,8 +24,7 @@ import json
 # PAGE CONFIGURATION
 # ============================================================================
 st.set_page_config(
-    page_title="🔐 Invisible DRM Platform",
-    page_icon="🔐",
+    page_title="Invisible DRM Platform",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -348,7 +347,7 @@ Decoder Exists: {os.path.exists(MODEL_PATH_DECODER)}""")
                 
                 try:
                     # Preprocess
-                    status_text.text("🔄 Preprocessing images...")
+                    status_text.text("Preprocessing images...")
                     progress_bar.progress(20)
                     
                     cover_array = preprocess_image(cover_img)
@@ -607,7 +606,7 @@ Decoder Exists: {os.path.exists(MODEL_PATH_DECODER)}""")
 # ============================================================================
 
 def page_compare():
-    st.title("🔍 Compare & Verify")
+    st.title("Compare & Verify")
     st.markdown("Verify ownership by comparing original and potentially leaked images.")
     
     st.subheader("Upload Images to Compare")
@@ -672,11 +671,11 @@ Decoder Exists: {os.path.exists(MODEL_PATH_DECODER)}""")
                 
                 progress_bar.progress(100)
                 
-                st.subheader("📊 Comparison Results")
+                st.subheader("Comparison Results")
                 
                 col_m1, col_m2, col_m3 = st.columns(3)
                 with col_m1:
-                    st.metric("🎯 Proof PSNR", f"{psnr_proof:.1f} dB")
+                    st.metric("Proof PSNR", f"{psnr_proof:.1f} dB")
                     if psnr_proof > 30:
                         st.markdown("✅ **Same ownership proof** (high similarity)")
                     elif psnr_proof > 20:
@@ -685,7 +684,7 @@ Decoder Exists: {os.path.exists(MODEL_PATH_DECODER)}""")
                         st.markdown("❌ **Different proofs**")
                 
                 with col_m2:
-                    st.metric("📐 Proof SSIM", f"{ssim_proof:.4f}")
+                    st.metric("Proof SSIM", f"{ssim_proof:.4f}")
                     if ssim_proof > 0.9:
                         st.markdown("✅ Structurally identical")
                     elif ssim_proof > 0.7:
@@ -702,7 +701,7 @@ Decoder Exists: {os.path.exists(MODEL_PATH_DECODER)}""")
                 
                 # Verdict
                 st.divider()
-                st.subheader("🏛️ Ownership Verification Verdict")
+                st.subheader("Ownership Verification Verdict")
                 
                 if psnr_proof > 25 and ssim_proof > 0.85:
                     st.success("✅ **OWNERSHIP VERIFIED** - The extracted proofs match! This confirms you are the rightful owner.")
@@ -715,25 +714,25 @@ Decoder Exists: {os.path.exists(MODEL_PATH_DECODER)}""")
                 st.error(f"❌ Error during comparison: {e}")
     
     else:
-        st.info("👆 Please upload two images to compare their ownership proofs.")
+        st.info("Please upload two images to compare their ownership proofs.")
 
 # ============================================================================
 # PAGE: ABOUT & DOCUMENTATION
 # ============================================================================
 
 def page_about():
-    st.title("ℹ️ About Invisible DRM")
+    st.title("ℹAbout Invisible DRM")
     
     col1, col2 = st.columns([2, 1])
     
     with col1:
         st.markdown("""
-        ## 🎯 What is Invisible DRM?
+        ## What is Invisible DRM?
         
         **Invisible DRM** is a cutting-edge Digital Rights Management platform that uses **deep learning-based steganography** 
         to embed invisible "Proof of Ownership" (like your studio logo or unique ID card) directly into your artwork.
         
-        ### 🔐 Key Features
+        ### Key Features
         
         - **Imperceptible Encoding**: Changes are invisible to the human eye (<1 pixel difference on average)
         - **Persistent Ownership**: Proof survives image cropping, compression, and minor edits
@@ -743,7 +742,7 @@ def page_about():
         
         ---
         
-        ## 🔬 How It Works
+        ## How It Works
         
         ### Phase 1: Encoding (Hide Ownership)
         ```
@@ -776,7 +775,7 @@ def page_about():
         
         ---
         
-        ## 📊 Technical Specifications
+        ## Technical Specifications
         
         | Property | Value |
         |----------|-------|
@@ -790,28 +789,28 @@ def page_about():
         
         ---
         
-        ## 🎓 Steganography Basics
+        ## Steganography Basics
         
         **Steganography** = Art of hiding information invisibly
         
         Unlike **Watermarking** (visible marks), steganography embeds data so subtly that:
-        - 👁️ The image looks identical to the human eye
-        - 🔧 Metadata cannot be deleted (it's baked into pixels)
-        - ✂️ Cropped sections still contain ownership evidence
-        - 📸 Compressed copies retain the embedded proof
+        - The image looks identical to the human eye
+        - Metadata cannot be deleted (it's baked into pixels)
+        - Cropped sections still contain ownership evidence
+        - Compressed copies retain the embedded proof
         
         """)
     
     with col2:
         st.markdown("""
-        ### 🚀 Quick Facts
+        ### Quick Facts
         
         - **Model Size**: ~300 KB (encoder) + ~260 KB (decoder)
         - **Processing Speed**: <1 second per image
         - **Success Rate**: 95%+ ownership verification
         - **Robustness**: Survives JPEG compression (Q=80+)
         
-        ### 📈 Use Cases
+        ### Use Cases
         
         ✅ Digital Artists  
         ✅ Photographers  
@@ -819,7 +818,7 @@ def page_about():
         ✅ Content Creators  
         ✅ Brand Protection  
         
-        ### 🏆 Advantages
+        ### Advantages
         
         ✅ No visible watermarks  
         ✅ Survives edits  
@@ -832,7 +831,7 @@ def page_about():
     st.divider()
     
     st.markdown("""
-    ## 📚 How to Use
+    ## How to Use
     
     ### For Artists: Protect Your Work
     
@@ -870,7 +869,7 @@ def page_about():
     
     ---
     
-    ## 🔗 Technical Details
+    ## Technical Details
     
     **Encoder Architecture:**
     - Six Conv2D layers (64→256→128→64→32→16 filters)
@@ -905,7 +904,7 @@ def page_about():
 def main():
     # Sidebar
     with st.sidebar:
-        st.markdown("# 🔐 Invisible DRM")
+        st.markdown("# Invisible DRM")
         st.markdown("---")
         
         page = st.radio(
@@ -917,7 +916,7 @@ def main():
         st.markdown("---")
         
         # Statistics
-        st.markdown("### 📊 Platform Stats")
+        st.markdown("### Platform Stats")
         col1, col2 = st.columns(2)
         with col1:
             st.metric("Model Size", "560 KB")
@@ -932,7 +931,7 @@ def main():
         
         st.markdown("---")
         st.markdown("""
-        ### 🎯 Quick Tips
+        ### Quick Tips
         
         **For Best Results:**
         - Use high-contrast logos as secrets
@@ -941,9 +940,9 @@ def main():
         - Backup your original secret image
         
         **Supported Formats:**
-        - 📷 JPG, JPEG (recommended)
-        - 🖼️ PNG (for transparency)
-        - ✅ Auto-resized to 128×128
+        - JPG, JPEG (recommended)
+        - PNG (for transparency)
+        - Auto-resized to 128×128
         """)
     
     # Main content
