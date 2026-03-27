@@ -721,7 +721,7 @@ Decoder Exists: {os.path.exists(MODEL_PATH_DECODER)}""")
 # ============================================================================
 
 def page_about():
-    st.title("ℹAbout Invisible DRM")
+    st.title("About Invisible DRM")
     
     col1, col2 = st.columns([2, 1])
     
@@ -807,7 +807,7 @@ def page_about():
         
         - **Model Size**: ~300 KB (encoder) + ~260 KB (decoder)
         - **Processing Speed**: <1 second per image
-        - **Success Rate**: 95%+ ownership verification
+        - **Success Rate**: 90%+ ownership verification
         - **Robustness**: Survives JPEG compression (Q=80+)
         
         ### Use Cases
@@ -859,7 +859,7 @@ def page_about():
     
     ---
     
-    ## ⚠️ Important Notes
+    ## Important Notes
     
     - Both cover and secret images must be **at least 64×64 pixels**
     - Supported formats: **JPG, JPEG, PNG**
@@ -915,21 +915,21 @@ def main():
         
         st.markdown("---")
         
-        # Statistics
-        st.markdown("### Platform Stats")
-        col1, col2 = st.columns(2)
-        with col1:
-            st.metric("Model Size", "560 KB")
-        with col2:
-            st.metric("Image Size", "128×128")
+        # # Statistics
+        # st.markdown("### Platform Stats")
+        # col1, col2 = st.columns(2)
+        # with col1:
+        #     st.metric("Model Size", "560KB")
+        # with col2:
+        #     st.metric("Image Size", "128×128")
         
-        col1, col2 = st.columns(2)
-        with col1:
-            st.metric("Speed", "<1s")
-        with col2:
-            st.metric("Accuracy", "95%+")
+        # col1, col2 = st.columns(2)
+        # with col1:
+        #     st.metric("Speed", "<1s")
+        # with col2:
+        #     st.metric("Accuracy", "95%+")
         
-        st.markdown("---")
+        # st.markdown("---")
         st.markdown("""
         ### Quick Tips
         
