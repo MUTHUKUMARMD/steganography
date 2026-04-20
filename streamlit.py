@@ -9,8 +9,6 @@ import numpy as np
 import cv2
 import tensorflow as tf
 from tensorflow.keras.models import load_model
-from tensorflow.keras.layers import Input, Conv2D, GaussianNoise, Concatenate
-from tensorflow.keras.models import Model
 import os
 import math
 import io
@@ -86,8 +84,8 @@ IMG_SIZE = 128
 
 # Get absolute paths to models - they're in the same directory as this script
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_PATH_ENCODER = os.path.join(SCRIPT_DIR, "encoder_rgb_exact.h5")
-MODEL_PATH_DECODER = os.path.join(SCRIPT_DIR, "decoder_rgb_exact.h5")
+MODEL_PATH_ENCODER = os.path.join(SCRIPT_DIR, "unet_encoder_best.keras")
+MODEL_PATH_DECODER = os.path.join(SCRIPT_DIR, "resnet_decoder_best.keras")
 
 print(f"Script directory: {SCRIPT_DIR}")
 print(f"Encoder path: {MODEL_PATH_ENCODER}")
@@ -95,32 +93,9 @@ print(f"Encoder exists: {os.path.exists(MODEL_PATH_ENCODER)}")
 print(f"Decoder path: {MODEL_PATH_DECODER}")
 print(f"Decoder exists: {os.path.exists(MODEL_PATH_DECODER)}")
 
-def build_encoder_model(img_size=IMG_SIZE):
-    """Build encoder model architecture from notebook specification"""
-    s = Input((img_size, img_size, 3), name='secret_rgb')
-    c = Input((img_size, img_size, 3), name='cover_rgb')
-    x = Concatenate(axis=-1)([c, s])  # 6 channels
-    x = Conv2D(64, 3, padding='same', activation='relu')(x)
-    x = Conv2D(64, 3, padding='same', activation='relu')(x)
-    x = Conv2D(32, 3, padding='same', activation='relu')(x)
-    stego = Conv2D(3, 3, padding='same', activation='sigmoid', name='stego_rgb')(x)
-    return Model([s, c], stego, name='encoder')
-
-def build_decoder_model(img_size=IMG_SIZE):
-    """Build decoder model architecture from notebook specification"""
-    inp = Input((img_size, img_size, 3), name='stego_input')
-    x = GaussianNoise(0.01)(inp)
-    x1 = Conv2D(64, 3, padding='same', activation='relu')(x)
-    x2 = Conv2D(32, 3, padding='same', activation='relu')(x)
-    x = Concatenate(axis=-1)([x1, x2])
-    x = Conv2D(64, 3, padding='same', activation='relu')(x)
-    x = Conv2D(32, 3, padding='same', activation='relu')(x)
-    recovered = Conv2D(3, 3, padding='same', activation='sigmoid', name='recovered_rgb')(x)
-    return Model(inp, recovered, name='decoder')
-
 @st.cache_resource
 def load_models():
-    """Load pre-trained encoder and decoder models by building architecture and loading weights"""
+    """Load pre-trained UNet encoder and ResNet decoder models"""
     encoder = None
     decoder = None
     
@@ -129,26 +104,24 @@ def load_models():
     decoder_exists = os.path.exists(MODEL_PATH_DECODER)
     
     if not encoder_exists:
-        print(f"ERROR: Encoder weights not found at {MODEL_PATH_ENCODER}")
+        print(f"ERROR: Encoder model not found at {MODEL_PATH_ENCODER}")
     if not decoder_exists:
-        print(f"ERROR: Decoder weights not found at {MODEL_PATH_DECODER}")
+        print(f"ERROR: Decoder model not found at {MODEL_PATH_DECODER}")
     
-    # Build and load encoder
+    # Load encoder
     if encoder_exists:
         try:
-            encoder = build_encoder_model(IMG_SIZE)
-            encoder.load_weights(MODEL_PATH_ENCODER)
-            print(f"✓ Encoder built and weights loaded successfully")
+            encoder = load_model(MODEL_PATH_ENCODER)
+            print(f"✓ Encoder loaded successfully")
         except Exception as e:
             print(f"ERROR loading encoder: {e}")
             return None, None
     
-    # Build and load decoder
+    # Load decoder
     if decoder_exists:
         try:
-            decoder = build_decoder_model(IMG_SIZE)
-            decoder.load_weights(MODEL_PATH_DECODER)
-            print(f"✓ Decoder built and weights loaded successfully")
+            decoder = load_model(MODEL_PATH_DECODER)
+            print(f"✓ Decoder loaded successfully")
         except Exception as e:
             print(f"ERROR loading decoder: {e}")
             return None, None
@@ -301,8 +274,8 @@ def page_encode():
         st.markdown("""
         ### Diagnostic Information:
         **Model Files:**
-        - Encoder: `encoder_rgb_exact.h5`
-        - Decoder: `decoder_rgb_exact.h5`
+        - Encoder: `unet_encoder_best.keras`
+        - Decoder: `resnet_decoder_best.keras`
         
         **Expected Location:** Same directory as streamlit.py
         """)
@@ -320,7 +293,7 @@ Decoder Exists: {os.path.exists(MODEL_PATH_DECODER)}""")
     col1, col2 = st.columns(2)
     
     with col1:
-        st.subheader("Original Artwork (Cover)")
+        st.subheader("Ownership Proof (Secret)")
         uploaded_cover = st.file_uploader("Upload artwork image", type=['jpg', 'jpeg', 'png'], key='cover')
         
         if uploaded_cover:
@@ -328,7 +301,7 @@ Decoder Exists: {os.path.exists(MODEL_PATH_DECODER)}""")
             st.image(cover_img, caption="Original Artwork", use_column_width=True)
     
     with col2:
-        st.subheader("Ownership Proof (Secret)")
+        st.subheader("Original Artwork (Cover)")
         uploaded_secret = st.file_uploader("Upload ownership proof (logo/ID)", type=['jpg', 'jpeg', 'png'], key='secret')
         
         if uploaded_secret:
@@ -457,7 +430,7 @@ Decoder Exists: {os.path.exists(MODEL_PATH_DECODER)}""")
                         "timestamp": datetime.now().isoformat(),
                         "cover_shape": cover_array.shape,
                         "secret_shape": secret_array.shape,
-                        "model": "encoder_rgb_exact",
+                        "model": "unet_encoder_best.keras",
                         "metrics": {
                             "cover_stego_psnr": float(cover_stego_psnr),
                             "secret_recovered_psnr": float(secret_recovered_psnr),
@@ -497,7 +470,7 @@ def page_decode():
         st.error("❌ Decoder Model Failed to Load")
         st.markdown("""
         ### Diagnostic Information:
-        **Model File:** `decoder_rgb_exact.h5`
+        **Model File:** `resnet_decoder_best.keras`
         
         **Expected Location:** Same directory as streamlit.py
         """)
@@ -627,7 +600,7 @@ def page_compare():
             st.error("❌ Decoder Model Failed to Load")
             st.markdown("""
             ### Diagnostic Information:
-            **Model File:** `decoder_rgb_exact.h5`
+            **Model File:** `resnet_decoder_best.keras`
             
             **Expected Location:** Same directory as streamlit.py
             """)
@@ -877,9 +850,9 @@ def page_about():
     - Sigmoid output for RGB values [0,1]
     
     **Decoder Architecture:**
-    - Gaussian noise injection at input (robustness)
-    - Similar structure with GaussianNoise layer
-    - Trained on 100 epochs with Adam optimizer
+    - ResNet-based design with skip connections
+    - Deep residual blocks for better feature extraction
+    - Trained on 200+ epochs with Adam optimizer
     
     **Loss Function:**
     ```
